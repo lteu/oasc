@@ -1,5 +1,8 @@
-OASC challenge
+SUNNY-AS for OASC challenge
 ===
+
+This programm is an extension of the SUNNY-AS tool, available at [CP-UNIBO](https://github.com/CP-Unibo/sunny-as)
+
 
 We integrated a training phase for SUNNY algorithm,
 and we proposed two approches: autok and fkvar.
@@ -39,4 +42,4 @@ the following commands:
  $ sh oasc_test.sh run_fkvar tasks2.txt # configured for parallel execution
 ```
 
-Note that, two training approaches should run separately.
+Note that, two training approaches should run separately. 

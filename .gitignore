@@ -1,6 +1,5 @@
 data/*
 cssh/*
-results/*
 **.log
 **.pyc
 **.csv

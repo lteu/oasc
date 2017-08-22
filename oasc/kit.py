@@ -377,7 +377,7 @@ def prepare_scenario(scenario_name,tdir,number_insts):
     sys.exit()
 
   if not os.path.exists(scenario_t):
-    print 'missing t folder'
+    print 'Creating folder t'
     copyTrainFiles(scenario_path,tdir) 
 
   # split train

@@ -69,22 +69,26 @@
 
 \section{Description}
 
-\subsection{Proposals}
-This proposed solution is an improvement of SUNNY-AS \cite{DBLP:conf/cilc/AmadiniBGLM15,sunnyas} with the ideas suggested by the Works \cite{DBLP:conf/lion/LindauerBH16,Kohavi97wrappersfor}.
 
-SUNNY-AS is an per instance algorithm scheduling strategy based on K-NN techniques. The Work \cite{DBLP:conf/lion/LindauerBH16} has demonstrated that how a training phase, by studying the value $K$ and the number of solvers, can boost SUNNY performance. However, we believe that the number of solvers is a trivial option to configure, because, in our original version, SUNNY employs less solvers as reported by \cite{DBLP:conf/lion/LindauerBH16}. In this Work, we have proposed two solutions, `autok' and `fkvar'. 
+Our proposed solution is an extension of SUNNY-AS \cite{DBLP:conf/cilc/AmadiniBGLM15,sunnyas} with the ideas borrowed from the Works \cite{DBLP:conf/lion/LindauerBH16,Kohavi97wrappersfor}.
+
+SUNNY-AS is an per instance algorithm scheduling strategy based on K-NN techniques. The Work \cite{DBLP:conf/lion/LindauerBH16} has demonstrated that how a training phase, by studying the value $K$ and the number of solvers, can boost SUNNY performance. However, we believe that the number of solvers is a trivial option to configure, because, in our original version, SUNNY employs less solvers as reported. 
+
+\subsection{Approaches}
+
+In this Work, we have proposed two solutions, `autok' and `fkvar'. 
 
 \begin{itemize}
-  \item The `autok' has borrowed the ideas of TSUNNY from \cite{DBLP:conf/lion/LindauerBH16} by considering only the value $K$ (ignoring the number of solvers). 
-  \item The `fkvar' instead trains for both value $K$ and optimal features by using a wrapper method \cite{Kohavi97wrappersfor}, that is, we take SUNNY as the evaluator to measure the importance of each feature, we then perform a greedy forward selection, which consists several selection cycles. In each cycle, we loop on unselected feature set, we pick one feature at time and combine it with selected features (initially empty) as a test feature set. By tuning also the value k, SUNNY calculates the best par10 score that it can achieve with the test feature set. In the end of each cycle, it incorporates a new feature to the selected feature set. We stop further selection cycle when adding the new test feature alters SUNNY performance or the number of feature limit (cycle) is reached. At last, `fkvar' produces a combination of features and value $K$ which SUNNY performs the best on training data.
+  \item The `autok' is a variant of TSUNNY mentioned by \cite{DBLP:conf/lion/LindauerBH16}, where, we consider only the value $K$ (ignoring the number of solvers). 
+  \item The `fkvar' instead trains for both value $K$ and features by using a wrapper method \cite{Kohavi97wrappersfor}, that is, we take SUNNY as the evaluator and we then perform a greedy forward selection, which repeats a selection cycle defined as follow: in each cycle, we loop on unselected feature set, we pick one feature at time and combine it with selected features (initially empty) as a test feature set. By tuning also the value k, SUNNY calculates the best par10 score that it can achieve with the test feature set. In the end of each cycle, it incorporates a new feature to the selected feature set. We stop further selection cycle when adding the new test feature alters SUNNY performance or the number of feature limit (cycle) is reached. At last, `fkvar' produces a combination of features and value $K$ which SUNNY performs the best on training data.
 \end{itemize}
  
 
 \subsection{Representative instances}
-The representative instances are selected by the following way, it first classifies each instance to a solver who solve it in least time, then for each solver (class), it orders the instances from hard to easy in terms of runtime, then for each class, it picks one instance a time in order to reach the instance limit. 
+The representative instances are selected as follow, it first classifies each instance to a solver who solve it in least time, later, for each solver (class), it orders the instances from hard to easy in terms of runtime, then for each class, it picks one instance at time in order to reach the limit of instance set. 
 
 \subsection{Parameters}
-Our previous experiments \cite{DBLP:conf/cilc/AmadiniBGLM15} suggested that a handful subset of features (eg: 5) is often enough for SUNNY to obtain a competitive performance, as such, in `fkvar' we fixed such amount of feature to select. In order to guarantee an acceptable execution runtime, for the `fkvar' approach, we have taken up to $1500$ representative instances from training set as effective instances, and we also fixed the interval of $K$ as [3,30] \footnote{Several scenarios with around 5.000 instances, it may take couple of days for training. Besides, the interval [3,30] would cover most of the useful K values. }.  In the end of execution, we re-run `autok' $K \in [3,80]$ for a backup, i.e. if SUNNY runs better with entire features, we then adopt the combination of $K$ with the whole feature set instead. Differently, in the `autok' version, we consider the full training set as effective training data.
+Our previous experiments \cite{DBLP:conf/cilc/AmadiniBGLM15} suggested that a handful subset of features (eg: 5) is often enough for SUNNY to obtain a competitive performance, as such, in `fkvar' we fixed such amount of feature to select. In order to guarantee an acceptable execution runtime, for the `fkvar' approach, we have taken up to $1500$ representative instances from training set as effective instances, and we also fixed the interval of $K$ as [3,30] \footnote{Several scenarios with around 5.000 instances, it may take couple of days for training. Besides, the interval [3,30] would cover most of the useful K values. }. In addition, in the submitted `fkvar' version, when evaluating feature relevance, the par10 is calculated by averaging par10 of three best k instead of a single best k. In the end of execution, we re-run `autok' $K \in [3,80]$ for a backup, i.e. if SUNNY runs better with the entire features, we then go for the approach of `autok'. Differently, in the submitted `autok' version, we consider the full training set as effective training data instead of 1500 instances. 
 
 \section{Setup Instruction}
 

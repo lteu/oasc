@@ -349,6 +349,7 @@ def get_schedule(neighbours, timeout, portfolio, k, backup, max_size):
       if time < timeout:
         solved[solver].add(inst)
       times[solver] += time
+
   # Select the best sub-portfolio, i.e., the one that allows to solve more 
   # instances in the neighborhood.
   max_solved = 0
@@ -386,6 +387,7 @@ def get_schedule(neighbours, timeout, portfolio, k, backup, max_size):
     ns = len(solved[solver])
     if ns == 0 or round(timeout / n * ns) == 0:
       continue
+    print solver,n,ns
     schedule[solver] = timeout / n * ns
   
   tot_time = sum(schedule.values())

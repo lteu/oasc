@@ -250,11 +250,11 @@ def main(args):
         print row
       i += 1
 
-    # print schedule
+    print schedule
     # free time budget for backup solver 
     schedule = schedule_post_process(schedule,alg_performance)
 
-    # print schedule
+    print schedule
     rlt_oasc[inst] = stepOrder + schedule
     employed_solvers.append(inst_employ_solvers)
 

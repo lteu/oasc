@@ -70,7 +70,7 @@
 \section{Description}
 
 
-Our proposed solution is an extension of SUNNY-AS \cite{DBLP:conf/cilc/AmadiniBGLM15,sunnyas} with the ideas borrowed from the Works \cite{DBLP:conf/lion/LindauerBH16,Kohavi97wrappersfor}.
+Our proposed solution is an extension of SUNNY-AS \cite{DBLP:conf/ictai/2015,sunnyas} with the ideas borrowed from the Works \cite{DBLP:conf/lion/LindauerBH16,Kohavi97wrappersfor}.
 
 SUNNY-AS is an per instance algorithm scheduling strategy based on K-NN techniques. The Work \cite{DBLP:conf/lion/LindauerBH16} has demonstrated that how a training phase, by studying the value $K$ and the number of solvers, can boost SUNNY performance. However, we believe that the number of solvers is a trivial option to configure, because, in our original version, SUNNY employs less solvers as reported. 
 
@@ -88,7 +88,7 @@ In this Work, we have proposed two solutions, `autok' and `fkvar'.
 The representative instances are selected as follow, it first classifies each instance to a solver who solve it in least time, later, for each solver (class), it orders the instances from hard to easy in terms of runtime, then for each class, it picks one instance at time in order to reach the limit of instance set. 
 
 \subsection{Parameters}
-Our previous experiments \cite{DBLP:conf/cilc/AmadiniBGLM15} suggested that a handful subset of features (eg: 5) is often enough for SUNNY to obtain a competitive performance, as such, in `fkvar' we fixed such amount of feature to select. In order to guarantee an acceptable execution runtime, for the `fkvar' approach, we have taken up to $1500$ representative instances from training set as effective instances, and we also fixed the interval of $K$ as [3,30] \footnote{Several scenarios with around 5.000 instances, it may take couple of days for training. Besides, the interval [3,30] would cover most of the useful K values. }. In addition, in the submitted `fkvar' version, when evaluating feature relevance, the par10 is calculated by averaging par10 of three best k instead of a single best k. In the end of execution, we re-run `autok' $K \in [3,80]$ for a backup, i.e. if SUNNY runs better with the entire features, we then go for the approach of `autok'. Differently, in the submitted `autok' version, we consider the full training set as effective training data instead of 1500 instances. 
+Our previous experiments \cite{DBLP:conf/ictai/2015} suggested that a handful subset of features (eg: 5) is often enough for SUNNY to obtain a competitive performance, as such, in `fkvar' we fixed such amount of feature to select. In order to guarantee an acceptable execution runtime, for the `fkvar' approach, we have taken up to $1500$ representative instances from training set as effective instances, and we also fixed the interval of $K$ as [3,30] \footnote{Several scenarios with around 5.000 instances, it may take couple of days for training. Besides, the interval [3,30] would cover most of the useful K values. }. In addition, in the submitted `fkvar' version, when evaluating feature relevance, the par10 is calculated by averaging par10 of three best k instead of a single best k. In the end of execution, we re-run `autok' $K \in [3,80]$ for a backup, i.e. if SUNNY runs better with the entire features, we then go for the approach of `autok'. Differently, in the submitted `autok' version, we consider the full training set as effective training data instead of 1500 instances. 
 
 \section{Setup Instruction}
 

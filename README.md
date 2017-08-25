@@ -44,7 +44,7 @@ the following commands:
 
 Note that, two training approaches should run separately. 
 
-Licence
+License
 ===
 The SUNNY-OASC is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License and the above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 

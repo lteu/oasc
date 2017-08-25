@@ -21,7 +21,7 @@ sys.path.append(src_path)
 
 from train_scenario_oasc import parse_description
 from train_scenario_oasc import parse_arguments as parse_train_arguments
-from sunny import normalize,get_neighbours_list
+from sunny_oasc import normalize,get_neighbours_list
 from pre_process import select_manually_str
 
 def test_scenario_mock(input_args,test_path,args,lims,info,test,ground):

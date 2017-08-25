@@ -61,11 +61,12 @@ def validate_trained_scenario(scenario_name,postfix):
     if 'outcome' in filename:
       aFile = filename
       break
-  print 'Retriving Outcome File: ',outcomedirpath
+  
   suffix = aFile.split('-k-')[1]
 
   # get params
   paramfile = outcomedirpath+'outcome-k-'+suffix
+  print 'Retrive training outcome: ',paramfile
   if not os.path.exists(paramfile):
     sys.exit('Missing Outcomefile '+paramfile)
 

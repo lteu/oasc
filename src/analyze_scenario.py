@@ -17,7 +17,7 @@ import sys
 import json
 import getopt
 
-from sunny import *
+from sunny_oasc import *
 
 def getRunTime(path_scenario):
   # print 'Extracting runtimes'

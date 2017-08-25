@@ -202,7 +202,6 @@ def main(args):
         for (step, cost) in step_costs.items() 
         if step in stepOrder
     )
-  # print total_cost
 
   reader = csv.reader(open(scenario + 'feature_values.arff'), delimiter = ',')
   for row in reader:
@@ -250,11 +249,11 @@ def main(args):
         print row
       i += 1
 
-    print schedule
+    # print schedule
     # free time budget for backup solver 
     schedule = schedule_post_process(schedule,alg_performance)
 
-    print schedule
+    # print [inst,stepOrder+schedule]
     rlt_oasc[inst] = stepOrder + schedule
     employed_solvers.append(inst_employ_solvers)
 
@@ -273,7 +272,7 @@ def main(args):
 
   result_dir = root + '/results/'+approach
   result_path = result_dir+'/'+scenarioname+'.json'
-  print 'Result path: ',result_path
+  print 'Results stored in: ',result_path
   if not os.path.exists(result_dir):
     os.makedirs(result_dir)
 

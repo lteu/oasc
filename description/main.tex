@@ -93,7 +93,7 @@ SUNNY-OASC has two execution modalities: \texttt{autok} and
 
 \begin{itemize}
   \item The \texttt{autok} is a variant of T-SUNNY as defined by 
-\cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved training 
+\cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved by training 
 also on the size of the value of the neighborhood 
 $K$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
 reimplementation of T-SUNNY used a different algorithm to select the 
@@ -120,10 +120,10 @@ best on training data.
 \subsection{Representative instances}
 For performance reasons, SUNNY-OASC is not used on all the instances available 
 but only on some selected ones.
-The representative instances use for the training are selected as follow: i) 
+The representative instances used for the training are selected as follow: i) 
 SUNNY-OASC first associates each instance to a solver that solves it in the 
 least time, ii) for each solver instances are ordered from hard to easy in terms 
-of runtime, ii) for each solvers one instance at the time is picked until a 
+of runtime, iii) for each solvers one instance at the time is picked until a 
 global limit on the number of representative instances is reached.
 
 \subsection{Parameters for the Challenge}
@@ -141,6 +141,14 @@ representative instance set. We also fixed the interval of $K$ as [3,30].
 % \TODO{Jac: non capisco questa frase e pertanto la commento. In addition, in the 
 % submitted \texttt{fkvar} version, when evaluating feature relevance, the par10 
 % is calculated by averaging par10 of the best k instead of a single best k.}
+
+% \TODO{Tong: infatti, la descrizione chiede 'brief description' quindi possiamo
+% anche lasciare questo pezzo commentato. Pero' per spiegare meglio,
+% faccio un esempio, par10 per K in [1,5] con feature f1 e' S =(3,2,3,5,1),
+% utility(f1) = min(S) = min(3,2,3,5,1) = 1 
+% invece, questa proposta del fkvar-3, e' utility(f1) = (1+2+3)/3 = 2 dove, 
+% 1,2,3 sono i primi 3 par10 piu' piccoli in S.
+% questo approccio aiuta sunny-as in qualche modo di evitare di staccare in local optima}
 
 When \texttt{fkvar} is executed, we also run 
 \texttt{autok} with $K \in [3,80]$ as a backup. If SUNNY runs better with the 
@@ -162,10 +170,10 @@ automatically call `oasc' for the different execution modalities.
 
 The program runs training and testing in sequence. Let us take \texttt{autok} 
 approach as execution example. To run it, in the folder `main' the 
-command ``sh make\_oasc\_tasks.sh $<$ tasks.txt'' must be used to create 
+command ``sh make\_oasc\_tasks.sh $>$ tasks.txt'' must be used to create 
 the tasks. Then the train cab be done by running ``sh oasc\_train.sh 
 run\_autok tasks.txt''. After training, the test is run by ``sh 
-make\_oasc\_tasks.sh $<$ tasks.txt'' and later by ``sh oasc\_test.sh autok 
+make\_oasc\_tasks.sh $>$ tasks.txt'' and later by ``sh oasc\_test.sh autok 
 tasks.txt''.
 
 To run \texttt{fkvar} it is sufficient to replace 

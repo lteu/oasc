@@ -358,7 +358,7 @@ def main(args):
       (k, v[2])
       for k, v in solved.items()
   )
-  print alg_performance
+
   args = {
     'lb': lb,
     'ub': ub,

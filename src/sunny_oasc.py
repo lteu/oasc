@@ -128,9 +128,7 @@ def sel_inst_by_rate(cleandist):
       continue
 
     new_diff = x - pre_val
-    # print float(new_diff),float(pre_diff)
     percent = float(new_diff)/float(pre_diff)
-    # print  percent
     if percent > 12:
       break
 
@@ -242,8 +240,6 @@ def get_schedule_proposed(neighbours, timeout, portfolio, k, backup, max_size, s
   for i in range(1, m + 1):
     old_pfolio = best_pfolio
     
-    # print max_size, i
-    # print binom(max_size, i)
     for j in range(0, binom(max_size, i)):
       solved_instances = set([])
       solving_time = 0
@@ -387,12 +383,13 @@ def get_schedule(neighbours, timeout, portfolio, k, backup, max_size):
     ns = len(solved[solver])
     if ns == 0 or round(timeout / n * ns) == 0:
       continue
-    print solver,n,ns
+    # print solver,n,ns
     schedule[solver] = timeout / n * ns
   
-  tot_time = sum(schedule.values())
+  # tot_time = sum(schedule.values())
+  tot_time = round(sum(schedule.values()),5)
   # Allocate to the backup solver the (eventual) remaining time.
-  if round(tot_time) < timeout:
+  if tot_time < timeout:
     if backup in schedule.keys():
       schedule[backup] += timeout - tot_time
     else:

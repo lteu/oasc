@@ -18,11 +18,13 @@
  % to align numbers in a column by their decimal point.
  % Remove the next line if you don't require it.
 \usepackage[load-configurations=version-1]{siunitx} % newer version
+\usepackage{color}
  %\usepackage{siunitx}
 
  % The following command is just for this sample document:
 \newcommand{\cs}[1]{\texttt{\char`\\#1}}% remove this in your real article
 
+\newcommand{\TODO}[1]{\textcolor{red}{#1}}
  % Define an unnumbered theorem just for this sample document for
  % illustrative purposes:
 \theorembodyfont{\upshape}
@@ -69,35 +71,108 @@
 
 \section{Description}
 
+SUNNY-OASC is an per instance algorithm scheduling strategy based on K-NN 
+technique.
+SUNNY-OASC is an extension of 
+the SUNNY-AS tool (see \cite{ictai_paper,sunnyas}) with some 
+ideas borrowed from the work of  
+\cite{DBLP:conf/lion/LindauerBH16}. 
+% and \cite{Kohavi97wrappersfor}.
 
-Our proposed solution is an extension of SUNNY-AS \cite{DBLP:conf/ictai/2015,sunnyas} with the ideas borrowed from the Works \cite{DBLP:conf/lion/LindauerBH16,Kohavi97wrappersfor}.
+% In particular, as \cite{DBLP:conf/lion/LindauerBH16} show, the improvement 
+% in performance w.r.t. SUNNY-AS is mainly due to  has demonstrated that how a 
+% training phase, by studying the value $K$ and the number of solvers, can boost 
+% SUNNY performance. However, we believe that the number of solvers is a trivial 
+% option to configure, because, in our original version, SUNNY employs less 
+% solvers as reported. 
 
-SUNNY-AS is an per instance algorithm scheduling strategy based on K-NN techniques. The Work \cite{DBLP:conf/lion/LindauerBH16} has demonstrated that how a training phase, by studying the value $K$ and the number of solvers, can boost SUNNY performance. However, we believe that the number of solvers is a trivial option to configure, because, in our original version, SUNNY employs less solvers as reported. 
+\subsection{Execution modalities}
 
-\subsection{Approaches}
-
-In this Work, we have proposed two solutions, `autok' and `fkvar'. 
+SUNNY-OASC has two execution modalities: \texttt{autok} and 
+\texttt{fkvar}. 
 
 \begin{itemize}
-  \item The `autok' is a variant of TSUNNY mentioned by \cite{DBLP:conf/lion/LindauerBH16}, where, we consider only the value $K$ (ignoring the number of solvers). 
-  \item The `fkvar' instead trains for both value $K$ and features by using a wrapper method \cite{Kohavi97wrappersfor}, that is, we take SUNNY as the evaluator and we then perform a greedy forward selection, which repeats a selection cycle defined as follow: in each cycle, we loop on unselected feature set, we pick one feature at time and combine it with selected features (initially empty) as a test feature set. By tuning also the value k, SUNNY calculates the best par10 score that it can achieve with the test feature set. In the end of each cycle, it incorporates a new feature to the selected feature set. We stop further selection cycle when adding the new test feature alters SUNNY performance or the number of feature limit (cycle) is reached. At last, `fkvar' produces a combination of features and value $K$ which SUNNY performs the best on training data.
+  \item The \texttt{autok} is a variant of T-SUNNY as defined by 
+\cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved training 
+also on the size of the value of the neighborhood 
+$K$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
+reimplementation of T-SUNNY used a different algorithm to select the 
+solvers to use. To chose the solvers we used the original SUNNY-AS 
+algorithm.}
+  \item The \texttt{fkvar} instead trains for the neighborhood value $K$ and 
+the subset of features to consider by using a wrapper method 
+\cite{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 
+greedy forward selection is adopted to select the subset of features for 
+computing the neighborhood.
+% 
+The selection cycle is defined as follow: 
+the unselected feature set is considered and we pick one feature at the time 
+adding it to the selected features set (initially empty) to form a test 
+feature set. By tuning also the value k, SUNNY calculates the best par10 score 
+that it can achieve with the test feature set. Based on the outcome, a new 
+feature is added until the performance decrease or we have performed a given 
+number of evaluations. In the end, \texttt{fkvar} 
+produces a combination of features and a value $K$ for which SUNNY performs the 
+best on training data.
 \end{itemize}
  
 
 \subsection{Representative instances}
-The representative instances are selected as follow, it first classifies each instance to a solver who solve it in least time, later, for each solver (class), it orders the instances from hard to easy in terms of runtime, then for each class, it picks one instance at time in order to reach the limit of instance set. 
+For performance reasons, SUNNY-OASC is not used on all the instances available 
+but only on some selected ones.
+The representative instances use for the training are selected as follow: i) 
+SUNNY-OASC first associates each instance to a solver that solves it in the 
+least time, ii) for each solver instances are ordered from hard to easy in terms 
+of runtime, ii) for each solvers one instance at the time is picked until a 
+global limit on the number of representative instances is reached.
 
-\subsection{Parameters}
-Our previous experiments \cite{DBLP:conf/ictai/2015} suggested that a handful subset of features (eg: 5) is often enough for SUNNY to obtain a competitive performance, as such, in `fkvar' we fixed such amount of feature to select. In order to guarantee an acceptable execution runtime, for the `fkvar' approach, we have taken up to $1500$ representative instances from training set as effective instances, and we also fixed the interval of $K$ as [3,30] \footnote{Several scenarios with around 5.000 instances, it may take couple of days for training. Besides, the interval [3,30] would cover most of the useful K values. }. In addition, in the submitted `fkvar' version, when evaluating feature relevance, the par10 is calculated by averaging par10 of three best k instead of a single best k. In the end of execution, we re-run `autok' $K \in [3,80]$ for a backup, i.e. if SUNNY runs better with the entire features, we then go for the approach of `autok'. Differently, in the submitted `autok' version, we consider the full training set as effective training data instead of 1500 instances. 
+\subsection{Parameters for the Challenge}
+The experiments performed by \cite{ictai_paper} suggest that a handful subset 
+of features (e.g., 5 or less) is often enough for SUNNY to obtain a 
+competitive performance. For this reason, in \texttt{fkvar} we fixed 
+5 as the amount of feature to select. In order to guarantee an acceptable 
+execution runtime, for the \texttt{fkvar} approach, we have chosen to 
+consider only $1500$ and not more instances to be included in the 
+representative instance set. We also fixed the interval of $K$ as [3,30]. 
+% \footnote{Note that with scenarios with around 5.000 instances, the training 
+% may take a couple of days for training. Besides, the interval [3,30] would 
+% cover most of the useful K values. }.
+
+% \TODO{Jac: non capisco questa frase e pertanto la commento. In addition, in the 
+% submitted \texttt{fkvar} version, when evaluating feature relevance, the par10 
+% is calculated by averaging par10 of the best k instead of a single best k.}
+
+When \texttt{fkvar} is executed, we also run 
+\texttt{autok} with $K \in [3,80]$ as a backup. If SUNNY runs better with the 
+entire feature set, we then use the solution produced by \texttt{autok}.
+
+For the \texttt{autok} version submitted, differently to the one used as a 
+backup when running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
+full training set as effective training data (i.e., more than 1500 
+instances are used to train if available). 
 
 \section{Setup Instruction}
 
-The source code is available at \cite{sunnyoasc} which requires Python v2.x. There are five folders, `data' and `results' contain oasc-challenge data and solution results respectively. `src' contains the original SUNNY-AS scripts from \cite{sunnyas}, `oasc' contains scripts who coordinate those in `src' for training and testing. In the end, in the folder `main', there have been placed the scripts that automatically call scripts in `oasc' for different scenarios. 
+The source code of SUNNY-OACS is available at \cite{sunnyoasc} and requires 
+Python v2. There are five folders: `data' and `results' contain oasc-challenge 
+data and solution results respectively, `src' contains the original SUNNY-AS 
+scripts from \cite{sunnyas}, `oasc' contains scripts that coordinate those in 
+`src' for training and testing, the folder `main' contains the scripts that 
+automatically call `oasc' for the different execution modalities. 
 
-The program runs training and testing in sequence, let us take `autok' approach as execution example. In the folder `main', launch the command ``sh make\_oasc\_tasks.sh $<$ tasks.txt'' to create tasks. Then train scenarios with ``sh oasc\_train.sh run\_autok tasks.txt''. After training, run testing with command ``sh make\_oasc\_tasks.sh $<$ tasks.txt'' then, ``sh oasc\_test.sh autok tasks.txt''. Whereas, to run fkvar approach, it is sufficient to replace literally `autok' by `fkvar' in the previous commands. 
+The program runs training and testing in sequence. Let us take \texttt{autok} 
+approach as execution example. To run it, in the folder `main' the 
+command ``sh make\_oasc\_tasks.sh $<$ tasks.txt'' must be used to create 
+the tasks. Then the train cab be done by running ``sh oasc\_train.sh 
+run\_autok tasks.txt''. After training, the test is run by ``sh 
+make\_oasc\_tasks.sh $<$ tasks.txt'' and later by ``sh oasc\_test.sh autok 
+tasks.txt''.
+
+To run \texttt{fkvar} it is sufficient to replace 
+literally \texttt{autok} by \texttt{fkvar} in the previous commands. 
 
 \bibliography{reference}
 
-\appendix
+% \appendix
 
 \end{document}

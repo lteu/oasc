@@ -22,7 +22,7 @@ Instructions
 The source codes of SUNNY and training are contained in the folder 'src' and 'oasc' respectively.
 The folder 'main' contains the scripts to run different modalities of SUNNY on all scenarios.
 
-# Launch Scripts
+
 
 The program runs training and testing in sequence, in following we take 
 'autok' approach as execution example:

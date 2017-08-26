@@ -1,13 +1,13 @@
 SUNNY-AS for OASC challenge
 ===
 
-This programm is an extension of the SUNNY-AS tool, available at [CP-UNIBO](https://github.com/CP-Unibo/sunny-as)
+This programm is an extension of the SUNNY-AS tool, available at [CP-UNIBO](https://github.com/CP-Unibo/sunny-as).
 
 
 We integrated a training phase for SUNNY,
 and we proposed two modalities: autok and fkvar. 
 "autok" studies only the neighbourhood value k, "fkvar" accounts for both k and features.
-For more details please refer to [description](https://github.com/lteu/oasc/blob/master/description/main.pdf)
+For more details please refer to [description](https://github.com/lteu/oasc/blob/master/description/main.pdf).
 
 
 Requirements
@@ -65,14 +65,14 @@ Note that,
 
 Authors
 ======
-Tong Liu (t.liu at cs.unibo.it)
-Roberto Amadini (roberto.amadini at unimelb.edu.au)
-Jacopo Mauro (mauro.jacopo at gmail.com)
+- Tong Liu (t.liu at cs.unibo.it)
+- Roberto Amadini (roberto.amadini at unimelb.edu.au)
+- Jacopo Mauro (mauro.jacopo at gmail.com)
 
 
 License :copyright:
 ===
-The SUNNY-OASC is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License and the above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The SUNNY-OASC is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License. The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 

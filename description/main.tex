@@ -35,10 +35,10 @@
 
  % change the arguments, as appropriate, in the following:
 \jmlrvolume{1}
-\jmlryear{20XX}
+\jmlryear{2017}
 \jmlrsubmitted{submission date}
 \jmlrpublished{publication date}
-\jmlrworkshop{workshop title} % W&CP title
+\jmlrworkshop{OASC Challenge} % W&CP title
 
  % The optional argument of \title is used in the header
 \title[SUNNY-OASC]{SUNNY with Algorithm Configuration}
@@ -106,7 +106,7 @@ greedy forward selection is adopted to select the subset of features for
 computing the neighborhood.
 % 
 The selection cycle is defined as follow: 
-the unselected feature set is considered and we pick one feature at the time 
+the unselected feature set is considered and we pick one feature at time 
 adding it to the selected features set (initially empty) to form a test 
 feature set. By tuning also the value k, SUNNY calculates the best par10 score 
 that it can achieve with the test feature set. Based on the outcome, a new 
@@ -123,7 +123,7 @@ but only on some selected ones.
 The representative instances used for the training are selected as follow: i) 
 SUNNY-OASC first associates each instance to a solver that solves it in the 
 least time, ii) for each solver instances are ordered from hard to easy in terms 
-of runtime, iii) for each solvers one instance at the time is picked until a 
+of runtime, iii) for each solver one instance at the time is picked until a 
 global limit on the number of representative instances is reached.
 
 \subsection{Parameters for the Challenge}
@@ -152,10 +152,10 @@ representative instance set. We also fixed the interval of $K$ as [3,30].
 
 When \texttt{fkvar} is executed, we also run 
 \texttt{autok} with $K \in [3,80]$ as a backup. If SUNNY runs better with the 
-entire feature set, we then use the solution produced by \texttt{autok}.
+entire feature set, we then use the result produced by \texttt{autok}.
 
 For the \texttt{autok} version submitted, differently to the one used as a 
-backup when running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
+backup, when running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
 full training set as effective training data (i.e., more than 1500 
 instances are used to train if available). 
 
@@ -171,7 +171,7 @@ automatically call `oasc' for the different execution modalities.
 The program runs training and testing in sequence. Let us take \texttt{autok} 
 approach as execution example. To run it, in the folder `main' the 
 command ``sh make\_oasc\_tasks.sh $>$ tasks.txt'' must be used to create 
-the tasks. Then the train cab be done by running ``sh oasc\_train.sh 
+the tasks. Then the train can be done by running ``sh oasc\_train.sh 
 run\_autok tasks.txt''. After training, the test is run by ``sh 
 make\_oasc\_tasks.sh $>$ tasks.txt'' and later by ``sh oasc\_test.sh autok 
 tasks.txt''.

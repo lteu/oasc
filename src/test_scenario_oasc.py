@@ -117,13 +117,15 @@ def parse_arguments(args):
   timeout = args['timeout']
   feat_def = args['feat_def']
   portfolio = args['portfolio']
+  # portfolio = args['alg_performance'].keys()
   feature_steps = args['feature_steps']
   static_schedule = args['static_schedule']
   selected_features = args['selected_features']
   step_costs = args['step_costs']
   alg_performance = args['alg_performance']
+  maximize = args['maximize']
 
-  max_size = len(portfolio)
+  max_size = len(args['portfolio'])
   approach = 'default'
   # Options parsing.
 
@@ -173,7 +175,7 @@ def parse_arguments(args):
   # print scenario
   return k, lb, ub, feat_def, kb_path, kb_name, static_schedule, timeout,      \
     portfolio, backup, out_file, scenario, print_static, selected_features,    \
-      feature_steps, max_size,step_costs,stepOrder,approach,alg_performance
+      feature_steps, max_size,step_costs,stepOrder,approach,alg_performance,maximize
 
 def schedule_post_process(schedule,alg_performance):
   schedulex = []
@@ -189,7 +191,7 @@ def schedule_post_process(schedule,alg_performance):
 def main(args):
   k, lb, ub, feat_def, kb_path, kb_name, static_schedule, timeout, portfolio,  \
     backup, out_file, scenario, print_static, selected_features, feature_steps,\
-      max_size,step_costs,stepOrder,approach,alg_performance = parse_arguments(args)
+      max_size,step_costs,stepOrder,approach,alg_performance,maximize = parse_arguments(args)
   
   # print selected_features
   # print stepOrder
@@ -228,7 +230,7 @@ def main(args):
     # Get the schedule computed by SUNNY algorithm.
     schedule = get_sunny_schedule(
       lb, ub, feat_def, kb_path, kb_name, static_schedule, timeout, k, \
-      portfolio, backup, selected_features, feat_vector, total_cost, max_size
+      portfolio, backup, selected_features, feat_vector, total_cost, max_size,maximize
     )
 
     # print schedule

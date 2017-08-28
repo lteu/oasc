@@ -29,7 +29,7 @@ def test_scenario_mock(input_args,test_path,args,lims,info,test,ground):
   main function
   '''
   k, lb, ub, feat_def,   static_schedule, timeout,      \
-  portfolio, backup,  selected_features,  feature_steps = parse_test_arg_mock(args)
+  portfolio, backup,  selected_features,  feature_steps, maximize = parse_test_arg_mock(args)
   
   test_insts = test[0]
   feature_costs = test[1]
@@ -47,7 +47,7 @@ def test_scenario_mock(input_args,test_path,args,lims,info,test,ground):
     # Get the schedule computed by SUNNY algorithm.
     schedule = get_sunny_schedule_mock(
       lb, ub, feat_def, lims, info, static_schedule, timeout, k, \
-      portfolio, backup, selected_features, feat_vector, feat_cost, max_size
+      portfolio, backup, selected_features, feat_vector, feat_cost, max_size, maximize
     )
     
     i = 1
@@ -57,7 +57,7 @@ def test_scenario_mock(input_args,test_path,args,lims,info,test,ground):
       i += 1
 
 
-  par10 = solution_score_mock(args,solution,feature_costs,ground)
+  par10 = solution_score_mock(args,solution,feature_costs,ground) if not maximize else solution_score_maxi(args,solution,feature_costs,ground)
 
   return par10
 
@@ -102,7 +102,7 @@ def train_scenario_mock(input_args):
   if root_path != '':
     description_path = root_path
 
-  pfolio, timeout, num_features, feature_steps = parse_description(description_path)
+  pfolio, timeout, num_features, feature_steps,maximize = parse_description(description_path)
   
   if feat_timeout < 0:
     feat_timeout = timeout / 2
@@ -253,6 +253,7 @@ def train_scenario_mock(input_args):
     'portfolio': pfolio,
     'neigh_size': neigh_size,
     'static_schedule': [],
+    'maximize':maximize,
     'selected_features': dict(
       (fn[k], k)
       for k, v in lims.items() 
@@ -271,7 +272,7 @@ def train_scenario_mock(input_args):
 
 def get_sunny_schedule_mock(
   lb, ub, def_feat_value, lims, info, static_schedule, timeout, k, \
-  portfolio, backup, selected_features, feat_vector, feat_cost, max_size
+  portfolio, backup, selected_features, feat_vector, feat_cost, max_size, maximize
 ):
 
   selected_features = sorted(selected_features.values())
@@ -287,8 +288,9 @@ def get_sunny_schedule_mock(
 
   if timeout > 0: 
     # to improve!
-
-    return get_schedule_fast(neighbours, timeout, portfolio, k, backup, 3)
+    result = get_schedule_fast(neighbours, timeout, portfolio, k, backup, 3) if not maximize else get_schedule_maxi(neighbours, timeout, portfolio, k, backup, 1)
+    # print result
+    return result
     # return get_schedule(neighbours, timeout, portfolio, k, backup, max_size) # sharemode:equal, allbackup,propotional
   else:
 
@@ -321,6 +323,56 @@ def get_schedule_fast(neighbours, timeout, portfolio, k, backup, schedule_size):
   sorted_schedule = sorted(schedule.items(), key = lambda x: solved_info[x[0]]['time'])
   return sorted_schedule
 
+
+def get_schedule_maxi(neighbours, timeout, portfolio, k, backup, schedule_size):
+  cutoff = schedule_size
+  inst_dic = neighbours
+  portfolio_names = portfolio
+
+  promising_one = promising_solver_maxi(inst_dic,portfolio_names,cutoff)
+
+  # n = sum([solved_info[s]['count'] for s in best_pfolio]) + (k - max_solved)
+  # schedule = {}
+  # # Compute the schedule and sort it by number of solved instances.
+  # for solver in best_pfolio:
+  #   ns = solved_info[s]['count']
+  #   if ns == 0 or round(timeout / n * ns) == 0:
+  #     continue
+  #   schedule[solver] = timeout / n * ns
+  
+  # tot_time = sum(schedule.values())
+  # # Allocate to the backup solver the (eventual) remaining time.
+  # if round(tot_time) < timeout:
+  #   if backup in schedule.keys():
+  #     schedule[backup] += timeout - tot_time
+  #   else:
+  #     schedule[backup]  = timeout - tot_time
+  # sorted_schedule = sorted(schedule.items(), key = lambda x: solved_info[x[0]]['time'])
+  # return sorted_schedule
+  return [[promising_one,99999]]
+
+
+def promising_solver_maxi(inst_dic,portfolio_names,cutoff):
+  '''
+  calculate schedule
+  '''
+  solved_initally = { portfolio_names[i] : {"insts":[],"time":0.0,"count":0} for i in range(len(portfolio_names)) }
+  insts = inst_dic.keys()
+  for ins in insts:
+    runs = inst_dic[ins]
+    for solver,infos in runs.items():
+      if infos['info'] == 'ok':
+        solved_initally[solver]['insts'].append(ins)
+        solved_initally[solver]['time'] += infos['time']
+        solved_initally[solver]['count'] += 1
+
+  performances = [(k,v['time']) for k,v in solved_initally.iteritems()]  
+  performances = sorted(performances, key=lambda x: x[1],reverse=True)
+  # print performances
+  return performances[0][0]
+  # best_pfolio,unsolver = mine_solver(insts,inst_dic,portfolio_names,cutoff)
+  # max_solved = len(insts) - unsolver
+  # return best_pfolio,solved_initally,max_solved
 
 
 def promising_solver(inst_dic,portfolio_names,cutoff):
@@ -378,6 +430,51 @@ def mine_solver(insts,inst_dic,portfolio_names,cutoff):
 
 # utility function
 #=============================
+
+
+def solution_score_maxi(args,solution,feature_cost,runtimes):
+  '''
+  calculate solution score
+  '''
+  # statistics and evaluation 
+  fsi = 0.0
+  fsi_vbs = 0.0
+  fsi_sbs = 0.0
+  par10 = 0.0
+  par10_vbs = 0.0
+  par10_sbs = 0.0
+  n = len(solution)
+  m = 0
+  p = 0
+
+  instances = []
+  old_inst = ''
+  par = True
+  first = True
+  for row in solution:
+    inst = row[0]
+    if inst not in runtimes:
+      continue
+    
+    instances.append(inst)
+
+    times = [x[1] for x in runtimes[inst].values() if x[0] == 'ok']
+    par10_vbs += max(times)
+
+    solver = row[2]
+
+    if runtimes[inst][solver][0] == 'ok' :
+      par10 += runtimes[inst][solver][1]
+      fsi += 1
+    else:
+      p += 1
+  
+  assert p + fsi == n
+
+  # fsi_score = fsi/n
+  # print 'FSI SCORE', fsi_score
+  return  -par10/n
+
 
 def solution_score_mock(args,solution,feature_cost,runtimes):
   '''
@@ -507,8 +604,9 @@ def parse_test_arg_mock(args):
   feature_steps = args['feature_steps']
   static_schedule = args['static_schedule']
   selected_features = args['selected_features']
+  maximize = args['maximize']
   return k, lb, ub, feat_def,   static_schedule, timeout,      \
-  portfolio, backup,  selected_features,  feature_steps
+  portfolio, backup,  selected_features,  feature_steps, maximize
 
 
 def getFeatureCost(scenario,feature_steps):

@@ -326,6 +326,29 @@ def get_schedule_proposed(neighbours, timeout, portfolio, k, backup, max_size, s
 #       suggested_time = time * 3/2
 #   return suggested_time
 
+
+def get_schedule_maxi(neighbours, timeout, portfolio, k, backup, max_size):
+  inst_dic = neighbours
+  portfolio_names = portfolio
+
+  solved_initally = { portfolio_names[i] : {"insts":[],"time":0.0,"count":0} for i in range(len(portfolio_names)) }
+  insts = inst_dic.keys()
+  for ins in insts:
+    runs = inst_dic[ins]
+    if isinstance(runs, str):
+      runs = eval(inst_dic[ins])
+    for solver,infos in runs.items():
+      if infos['info'] == 'ok':
+        solved_initally[solver]['insts'].append(ins)
+        solved_initally[solver]['time'] += infos['time']
+        solved_initally[solver]['count'] += 1
+
+  performances = [(k,v['time']) for k,v in solved_initally.iteritems()]  
+  performances = sorted(performances, key=lambda x: x[1],reverse=True)
+
+  return [[performances[0][0],99999]]
+
+
 def get_schedule(neighbours, timeout, portfolio, k, backup, max_size):
   """
   Returns the corresponding SUNNY schedule.
@@ -402,7 +425,7 @@ def get_schedule(neighbours, timeout, portfolio, k, backup, max_size):
 
 def get_sunny_schedule(
   lb, ub, def_feat_value, kb_path, kb_name, static_schedule, timeout, k, \
-  portfolio, backup, selected_features, feat_vector, total_cost, max_size
+  portfolio, backup, selected_features, feat_vector, total_cost, max_size,maximize
 ):
   selected_features = sorted(selected_features.values())
   with open(kb_path + kb_name + '.lims') as infile:
@@ -413,15 +436,11 @@ def get_sunny_schedule(
   )
   kb = kb_path + kb_name + '.info'
   neighbours = get_neighbours(norm_vector, selected_features, kb, k)
-  # timeout -= feat_cost + sum(t for (s, t) in static_schedule)
+
   timeout -= total_cost + sum(t for (s, t) in static_schedule)
   if timeout > 0: 
-    schedule = get_schedule(neighbours, timeout, portfolio, k, backup, max_size)
-    # schedule = get_schedule_fast(neighbours, timeout, portfolio, k, backup, 3)
-
+    schedule = get_schedule(neighbours, timeout, portfolio, k, backup, max_size) if not maximize else get_schedule_maxi(neighbours, timeout, portfolio, k, backup, max_size)
     return schedule
-
-    # return get_schedule_proposed(neighbours, timeout, portfolio, k, backup, max_size,5,'equal') # sharemode:equal, allbackup,propotional
   else:
     return []
 

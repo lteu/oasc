@@ -26,6 +26,7 @@ root = '/'.join(root_arr)
 src_path = root + '/src/'
 sys.path.append(src_path)
 
+from train_scenario_oasc import parse_description
 from sunny_mock import pre_process_mock,test_scenario_mock,train_scenario_mock,getFeatureCost
 from subprocess import Popen
 from math import sqrt
@@ -292,15 +293,19 @@ def run_sunny_oasc(src_path,scenario_test,scenario_train,params,approach):
   proc = Popen(cmd.split())
   proc.communicate()
   
+  description_path = scenario_train+'/'
+  pfolio, timeout, num_features, feature_steps, maximize = parse_description(description_path)
 
   if str(testFeat) != '':
     options = [
       '--kb-path', scenario_train + '/kb_' + kb_name,
       '-E', 'wrapper',
-      '-S', testFeat,
-      # '--static-schedule', 
-      '--filter-portfolio'
+      '-S', testFeat
     ]
+    if not maximize: 
+    # scenarios to maximize are special, leave unfilter portfolio at this moment
+      options.append('--filter-portfolio')
+
     cmd = ['python', src_path + 'pre_process.py'] + options + scenario_train.split()
     proc = Popen(cmd)
     proc.communicate()
@@ -608,6 +613,7 @@ def make_train_kbs(scenario_path):
   '''
   kbs_dic = {}
   cv_train = 'cv_'+scenario_path.split('/')[-1]
+
   for subdir in os.listdir(scenario_path + '/' + cv_train):
     if 'train_' in subdir and 'kb_' not in subdir:
       case_subdir = scenario_path + '/'+cv_train+'/'+subdir+'/'
@@ -623,6 +629,7 @@ def make_train_kbs(scenario_path):
 
       args,info,lims = train_scenario_mock(input_args)
       kbs_dic[case_subdir] = [args,info,lims]
+
 
   return kbs_dic
 

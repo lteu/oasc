@@ -168,6 +168,8 @@ def parse_description(path):
   # algorithm_cutoff_time
   timeout = dic['algorithm_cutoff_time']
 
+  maximize = dic['maximize'][0]
+
   # num_features
   if dic['features_deterministic'] != None:
     num_features = len(dic['features_deterministic'])
@@ -178,7 +180,7 @@ def parse_description(path):
   for key, value in dic['feature_steps'].iteritems():
     feature_steps[key] = value['provides']
 
-  return pfolio, timeout, num_features, feature_steps
+  return pfolio, timeout, num_features, feature_steps,maximize
 
 def main(args):
   # Setting variables.
@@ -189,8 +191,8 @@ def main(args):
   if root_path != '':
     description_path = root_path
 
-  pfolio, timeout, num_features, feature_steps = parse_description(description_path)
-  
+  pfolio, timeout, num_features, feature_steps,maximize = parse_description(description_path)
+
   if feat_timeout < 0:
     feat_timeout = timeout / 2
   kb_dir = kb_path  + kb_name + '/'
@@ -358,7 +360,6 @@ def main(args):
       (k, v[2])
       for k, v in solved.items()
   )
-
   args = {
     'lb': lb,
     'ub': ub,
@@ -369,6 +370,7 @@ def main(args):
     'portfolio': pfolio,
     'neigh_size': neigh_size,
     'static_schedule': [],
+    'maximize': maximize,
     # selected_features[F] is the index of feature F in the original feature 
     # space. (removed feat with a constant value)
     'selected_features': selected_features, # for validation
@@ -378,7 +380,9 @@ def main(args):
     'feature_steps': feature_steps,
     'step_costs':step_costs
   }
+
   args_file = kb_dir + kb_name + '.args'
+
   with open(args_file, 'w') as outfile:
     json.dump(args, outfile)
 

@@ -141,6 +141,7 @@ def remove_exp(x):
 def bestSolverPerInst(info_file):
   reader = csv.reader(open(info_file), delimiter = '|')
   best = {}
+
   for row in reader:
     best_solvers = [
       (float(it['time']), s) 
@@ -157,12 +158,13 @@ def select_features_manually_string(args, info_file, scenario, evaluator, search
   in_path = info_file[:info_file.rfind('/')] + '/feat_in.arff'
   in_file = open(in_path, 'w')
   
-  # best solver per instance
+  # best solver per instancepri
   best = bestSolverPerInst(info_file)
   # filter best solvers
+
   if filter_pf:
     args['portfolio'] = list(set(best.values()))
-  
+
   # feat.in
   reader = csv.reader(open(scenario + 'feature_values.arff'), delimiter = ',')
   pfolio = ','.join(args['portfolio'])

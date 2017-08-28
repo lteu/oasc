@@ -31,7 +31,7 @@ def autok_learning(param_learn):
 
   print 'Building context ...'
   context = build_context(sub_scenario_path)
-  
+
   log_file_hard,log_file_small,outcome_file = initFiles(scenario_outcome_dir,kRange[0],kRange[-1])
   features = informative_feat(sub_scenario_path+'/'+tdir)
 

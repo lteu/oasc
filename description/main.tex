@@ -73,38 +73,41 @@
 \maketitle
 
 \begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
-The SUNNY algorithm is a kNN portfolio technique originally tailored for CSP problems.
-It achieved excellent results consecutively in the Minizin Challenge in the last three years. 
-In 2015, SUNNY for the first time forked a branch for ASLIB \footnote{See \cite{bischl2016aslib}} problems, however, due to
-the lack of insufficient training process, it performed poorly in the ICON-Challenge 2015 \footnote{See \cite{kotthoff2015icon}}.
-After several efforts of investigation on algorithm configuration and on ASLIB problem features, we proposed
-an integrated training process for SUNNY and bring SUNNY into the OASC challenge. The final results were
-encouraging and competitive.
-
-% \TODO{abstract content improvements} 
+The SUNNY algorithm is a portfolio technique originally tailored for 
+Constraint Satisfaction Problems (CSPs). SUNNY allows to select a set of 
+solvers to be run to solve a given CSPs and was proven effective in the 
+context of the MiniZinc Challenge, i.e., the yearly international competition 
+for CSP solvers. In 2015, SUNNY was compared with other solver selectors in the 
+ICON-Challenge with good performances on some scenarios.
+In this paper we briefly describe the the new version of the SUNNY approach 
+tailored for the algorithm selection and submitted to the first Open Algorithm 
+Selection Challenge.
 \end{abstract}
 
 
-\section{Description}
+\section{SUNNY-OASC}
 
-\subsection{SUNNY}
+% \subsection{SUNNY}
 
-SUNNY is an per instance algorithm scheduling strategy based on kNN 
-. Briefly speaking, for each test instance, SUNNY selects
+SUNNY is an per instance algorithm scheduling strategy based on kNN. Briefly 
+speaking, for each test instance, SUNNY selects
 $k$ training instances which are similar to the test instance
 in terms of Euclidean Distance (on instance features). Based on the selected instances,
-SUNNY generates a schedule of solvers that cover the $k$ instances as much as possible. 
-Then, a time slot, which is propotional to the fraction of solved instances, is
-assigned to each solver. Finally, the proposed solvers get ordered
-according to the number of $k$ instances solved. 
-In the tool SUNNY-AS (see \cite{ictai_paper,sunnyas}),
-we selected a subset of solvers, which solve 
-the $k$ instances as least time as possible.
-  
+SUNNY generates a schedule of solvers that maximize the number of $k$ 
+instances solved by the selected solvers. 
+Then, a time slot, which is proportional to the fraction of solved instances, is
+assigned to each solver. Finally, the proposed solvers are ordered
+according to the number of $k$ instances that they solved.
 
-SUNNY-OASC is an extension of the
-original SUNNY algorithm with the idea of configuring neighbourhood size $k$ 
-(borrowed from the work of  \cite{DBLP:conf/lion/LindauerBH16}) and
+For a detailed description of the SUNNY approach we refer the interested 
+reader to \cite{ictai_paper,sunnycp2,sunnyas}.
+% In the tool SUNNY-AS (see ),
+% we selected a subset of solvers, which solve 
+% the $k$ instances as least time as possible.
+In the following we present SUNNY-OASC, i.e., an extension of the
+original SUNNY algorithm that allows the configuration of the neighborhood 
+size $k$ 
+(an idea borrowed from \cite{DBLP:conf/lion/LindauerBH16}) and
 wrapper-based feature selection.
 
 % and \cite{Kohavi97wrappersfor}.
@@ -131,7 +134,7 @@ solvers to use. To chose the solvers we used the original SUNNY-AS
 algorithm.}
   \item The \texttt{fkvar} instead trains for the neighborhood value $k$ and 
 the subset of features to consider by using a wrapper method 
-\cite{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 
+\citep{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 
 greedy forward selection is adopted to select the subset of features for 
 computing the neighborhood.
 % 
@@ -145,29 +148,38 @@ number of evaluations. In the end, \texttt{fkvar}
 produces a combination of features and a value $k$ for which SUNNY performs the 
 best on training data.
 
-When the selection cycle ends, we run a backup with the \texttt{autok} modality. This is helpful
-for those scenarios where all features are more relevant than the selected features
-for SUNNY performance.
+When the selection cycle ends, we run also as a backup the tool in 
+\texttt{autok} modality. This is helpful
+for those scenarios where all features are more relevant than the ones selected 
+by using the filtering mechanism. In this cases, indeed, we use the setting 
+computed by \texttt{autok} directly discarding the set of features 
+computed by using the wrapper filtering method.
 \end{itemize}
  
 
 \subsection{Representative instances}
-For training performance reasons \footnote{e.g. on a PC with Intel Core i5(3.30 GHz) and 8 GB RAM, running Ubuntu, training one fold (10 folds in total) of scenario PROTUS($4,000$ instances) would take 35 hours with \texttt{fkvar} approach}, SUNNY-OASC is not used on all the instances available 
-but only on some selected ones.
+Since training is computing intensive and may take a long time to 
+be performed,\footnote{On a PC with Intel Core i5 and 8 GB RAM running Ubuntu, 
+training only one fold out of 10 of the ASLib scenario PROTUS ($4,000$ 
+instances) would take for instance 35 hours using the \texttt{fkvar} approach.} 
+SUNNY-OASC is not used on all the instances available but only on some selected 
+ones.
 The representative instances used for the training are selected as follow: i) 
 SUNNY-OASC first associates each training instance to a solver that solves it in the 
-least time, according to the ground data, ii) for each solver instances are ordered from hard to easy in terms 
-of runtime, iii) for each solver one instance at the time is picked until a 
+least time, according to the train data, ii) for each solver, instances are 
+ordered from hard to easy in terms 
+of runtime, iii) for each solver, one instance at the time is picked until a 
 global limit on the number of representative instances is reached.
 
 \subsection{Parameters for the Challenge}
-In literature \cite{bischl2016aslib,ictai_paper}, it is suggested that a handful subset 
+\cite{bischl2016aslib} and \cite{ictai_paper} noted that a handful 
+subset 
 of features (e.g., 5 or less) is often enough for SUNNY to obtain  
 competitive performance. For this reason, in \texttt{fkvar} we fixed 
 5 as the number of feature to select. In order to guarantee an acceptable 
 execution runtime, for the \texttt{fkvar} approach, we have chosen to 
-consider only $1500$ and not more instances to be included in the 
-representative instance set. We also fixed the interval of $k$ as [3,30]. 
+consider only $1500$ instances to be included in the 
+representative instance set. We also fixed $k$ to vary between 3 and 30. 
 % \footnote{Note that with scenarios with around 5.000 instances, the training 
 % may take a couple of days for training. Besides, the interval [3,30] would 
 % cover most of the useful K values. }.
@@ -188,10 +200,10 @@ When \texttt{fkvar} is executed, we also run
 \texttt{autok} with $k \in [3,80]$ as a backup. If SUNNY runs better with the 
 entire feature set, we then use the result produced by \texttt{autok}.
 
-For the \texttt{autok} version submitted, different to the one used as a 
-backup, when running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
+For the \texttt{autok} version submitted, different to the one used when 
+running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
 full training set as effective training data (i.e., more than 1500 
-instances are used to train if available). 
+instances are used for the training process if available). 
 
 \section{Setup Instructions}
 

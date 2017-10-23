@@ -78,9 +78,9 @@ Constraint Satisfaction Problems (CSPs). SUNNY allows to select a set of
 solvers to be run to solve a given CSPs and was proven effective in the 
 context of the MiniZinc Challenge, i.e., the yearly international competition 
 for CSP solvers. In 2015, SUNNY was compared with other solver selectors in the 
-ICON-Challenge with good performances on some scenarios.
-In this paper we briefly describe the the new version of the SUNNY approach 
-tailored for the algorithm selection and submitted to the first Open Algorithm 
+first ICON Challenge on algorithm selection with less satisfactory performance.
+In this paper we briefly describe the new version of the SUNNY approach for 
+algorithm selection, that was submitted to the first Open Algorithm 
 Selection Challenge.
 \end{abstract}
 
@@ -89,25 +89,25 @@ Selection Challenge.
 
 % \subsection{SUNNY}
 
-SUNNY is an per instance algorithm scheduling strategy based on kNN. Briefly 
-speaking, for each test instance, SUNNY selects
+SUNNY is a per instance algorithm scheduling strategy based on $k$-NN algorithm. Roughly 
+speaking, for each test instance SUNNY selects
 $k$ training instances which are similar to the test instance
 in terms of Euclidean Distance (on instance features). Based on the selected instances,
-SUNNY generates a schedule of solvers that maximize the number of $k$ 
+SUNNY generates a schedule of solvers that maximize the number of
 instances solved by the selected solvers. 
-Then, a time slot, which is proportional to the fraction of solved instances, is
+Then, a time slot proportional to the fraction of solved instances is
 assigned to each solver. Finally, the proposed solvers are ordered
-according to the number of $k$ instances that they solved.
+according to the average solving time on the selected instances.
 
 For a detailed description of the SUNNY approach we refer the interested 
-reader to \cite{ictai_paper,sunnycp2,sunnyas}.
+reader to \cite{sunny,sunnycp2,paper_amai}.
 % In the tool SUNNY-AS (see ),
 % we selected a subset of solvers, which solve 
 % the $k$ instances as least time as possible.
-In the following we present SUNNY-OASC, i.e., an extension of the
-original SUNNY algorithm that allows the configuration of the neighborhood 
+In the following we present SUNNY-OASC, an extension of the
+original SUNNY algorithm that enables the configuration of the neighborhood 
 size $k$ 
-(an idea borrowed from \cite{DBLP:conf/lion/LindauerBH16}) and
+(an idea borrowed from \cite{DBLP:conf/lion/LindauerBH16}) and a 
 wrapper-based feature selection.
 
 % and \cite{Kohavi97wrappersfor}.
@@ -122,7 +122,7 @@ wrapper-based feature selection.
 \subsection{Execution modalities}
 
 SUNNY-OASC has two execution modalities: \texttt{autok} and 
-\texttt{fkvar}. 
+\texttt{fkvar}. \textbf{WHAT IS T-SUNNY???}
 
 \begin{itemize}
   \item The \texttt{autok} is a variant of T-SUNNY as defined by 
@@ -130,45 +130,44 @@ SUNNY-OASC has two execution modalities: \texttt{autok} and
 also on the size of the neighborhood 
 $k$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
 reimplementation of T-SUNNY used a different algorithm to select the 
-solvers to use. To chose the solvers we used the original SUNNY-AS 
+solvers to use. To choose the solvers we used the original SUNNY-AS 
 algorithm.}
-  \item The \texttt{fkvar} instead trains for the neighborhood value $k$ and 
+  \item The \texttt{fkvar} trains both on the neighborhood size and 
 the subset of features to consider by using a wrapper method 
 \citep{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 
 greedy forward selection is adopted to select the subset of features for 
 computing the neighborhood.
 % 
-The selection cycle is defined as follow: 
+The selection procedure is defined as follow: 
 the unselected feature set is considered and we pick one feature at time, 
-adding it to the selected features set (initially empty) to form a test 
+adding it to the selected feature set (initially empty) to form a test 
 feature set. By also tuning the value k, SUNNY calculates the best PAR10 score 
 that it can achieve with the test feature set. Based on the outcome, a new 
 feature is added until the performance decrease or we have performed a given 
-number of evaluations. In the end, \texttt{fkvar} 
+number of evaluations. Finally, \texttt{fkvar} 
 produces a combination of features and a value $k$ for which SUNNY performs the 
 best on training data.
 
-When the selection cycle ends, we run also as a backup the tool in 
+When the selection procedure ends, we also run SUNNY in %as a backup the tool in 
 \texttt{autok} modality. This is helpful
-for those scenarios where all features are more relevant than the ones selected 
-by using the filtering mechanism. In this cases, indeed, we use the setting 
-computed by \texttt{autok} directly discarding the set of features 
-computed by using the wrapper filtering method.
+for scenarios where the whole set of features is more relevant than the 
+feature set selected by using the wrapper filtering method. 
+In these cases, we simply use the setting computed by \texttt{autok}.
 \end{itemize}
  
 
 \subsection{Representative instances}
-Since training is computing intensive and may take a long time to 
-be performed,\footnote{On a PC with Intel Core i5 and 8 GB RAM running Ubuntu, 
+Since training is computationally expensive and may take a long time,\footnote{On a PC 
+with Intel Core i5 and 8 GB RAM running Ubuntu, 
 training only one fold out of 10 of the ASLib scenario PROTUS ($4,000$ 
 instances) would take for instance 35 hours using the \texttt{fkvar} approach.} 
 SUNNY-OASC is not used on all the instances available but only on some selected 
 ones.
-The representative instances used for the training are selected as follow: i) 
-SUNNY-OASC first associates each training instance to a solver that solves it in the 
-least time, according to the train data, ii) for each solver, instances are 
-ordered from hard to easy in terms 
-of runtime, iii) for each solver, one instance at the time is picked until a 
+The representative instances used for the training are selected as follows: (i) 
+SUNNY-OASC first associates to each training instance the fastest solver for solving 
+it, according to the training set; (ii) for each solver, instances are 
+ordered from hard to easy in terms of runtime;
+(iii) for each solver, one instance at a time is picked until a 
 global limit on the number of representative instances is reached.
 
 \subsection{Parameters for the Challenge}
@@ -177,7 +176,7 @@ subset
 of features (e.g., 5 or less) is often enough for SUNNY to obtain  
 competitive performance. For this reason, in \texttt{fkvar} we fixed 
 5 as the number of feature to select. In order to guarantee an acceptable 
-execution runtime, for the \texttt{fkvar} approach, we have chosen to 
+execution runtime, for the \texttt{fkvar} approach we 
 consider only $1500$ instances to be included in the 
 representative instance set. We also fixed $k$ to vary between 3 and 30. 
 % \footnote{Note that with scenarios with around 5.000 instances, the training 
@@ -202,8 +201,8 @@ entire feature set, we then use the result produced by \texttt{autok}.
 
 For the \texttt{autok} version submitted, different to the one used when 
 running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
-full training set as effective training data (i.e., more than 1500 
-instances are used for the training process if available). 
+full training set as effective training data. 
+%(i.e., more than 1500 instances are used for the training process if available). 
 
 \section{Setup Instructions}
 
@@ -216,14 +215,14 @@ automatically call `oasc' for the different execution modalities.
 
 The program runs training and testing in sequence. Let us take \texttt{autok} 
 approach as execution example. To run it, in the folder `main' the 
-command ``sh make\_oasc\_tasks.sh $>$ tasks.txt'' must be used to create 
-the tasks. Then the training can be done by running ``sh oasc\_train.sh 
-run\_autok tasks.txt''. After training, the test is run by ``sh 
-make\_oasc\_tasks.sh $>$ tasks.txt'' and later by ``sh oasc\_test.sh autok 
-tasks.txt''.
+command \texttt{sh make\_oasc\_tasks.sh $>$ tasks.txt} must be used to create 
+the tasks. Then the training can be done by running \texttt{sh oasc\_train.sh 
+run\_autok tasks.txt}. The test is performed by running \texttt{sh 
+make\_oasc\_tasks.sh $>$ tasks.txt} followed by \texttt{sh oasc\_test.sh autok 
+tasks.txt}.
 
-To run \texttt{fkvar} it is sufficient to replace 
- \texttt{autok} by \texttt{fkvar} in the previous commands. 
+To run \texttt{fkvar} it is enough to replace 
+ \texttt{autok} by \texttt{fkvar} in the above commands. 
 
 \bibliography{reference}
 

@@ -1,0 +1,65 @@
+# Review 1
+
+Overall, the system description is well written and I only found some minor issues:
+
+* Please add your affiliations
+* Please add an abstract (also for consistency with the other system descriptions)
+* Please add an high-level description of the main idea of sunny such that the paper is more self-contained
+* "par10" -> "PAR10"
+* Does fkvar subsumes autok? Please clarify.
+* "For performance reasons" -> What kind of performance reasons? Test performance? Or is the training process too expensive?
+* Please add some lines regarding the computational efforts you invested to obtain the predictions. Hardware, CPU time and so on.
+ 
+ # Review 2
+ 
+First, I would like to congratulate the authors on the performance of their
+submitted systems. 
+The submitted paper gives an overview of various options of SUNNY. Some 
+suggestions to make the paper a bit more understandable for a general 
+audience: 
+
+- The submission contains many details about some features of SUNNY, however
+it lacks a global description. It would be good to explain in a small paragraph
+what the main assumptions an contributions of the SUNNY system are.
+-- Additionally, please elaborate on the optimized neighborhood parameter
+  
+- Please clarify the sentence: "with some ideas borrowed from Lindauer". Which
+ideas?
+
+- The following sentence in particular is unclear: "SUNNY-OASC first associates 
+each instance to a solver that solves it in the least time."
+This statement seems wrong: If this was the case, then algorithm selection would
+be solved. I would reformulate this to:
+"SUNNY-OASC first associates each instance to a solver that solves it in the 
+least time, according to XXX, based on YYY".
+
+- In my personal opinion, Setup Instructions should not be part of a paper. In 
+its current formulation, it seems a bit unwieldy. If Sunny were to be integrated
+in ASLib, this should of course increase the visibility amongst the community.
+
+
+# Review 3
+
+The description is well-written and informative. I have only a few minor
+comments.
+
+The size of the neighborhood k is referenced inconsistently sometimes as K and
+sometimes as k. I believe it is usually a lowercase k in the literature.
+
+The ASlib paper [1] also observed that usually a small number of features is
+sufficient to achieve good performance.
+
+Typos, grammar, etc:
+
+"based on k-NN technique" -> "based on kNN"
+"the size of the value of the neighborhood" -> "the size of the neighborhood"
+"one feature at a time" -> "one feature at a time,"
+"By tuning also" -> "By also tuning"
+"obtain a competitive performance" -> "obtain competitive performance"
+"amount of features to select" -> "number of feature to select"
+"differently to the one used as backup" -> "different to the one used as backup"
+"Setup Instruction" -> "Setup Instructions"
+"the train can be done" -> "the training can be done"
+"to replace literally" -> "to replace"
+
+[1] Bischl, Bernd, Pascal Kerschke, Lars Kotthoff, Marius Lindauer, Yuri Malitsky, Alexandre Frechétte, Holger H. Hoos, et al. “ASlib: A Benchmark Library for Algorithm Selection.” Artificial Intelligence Journal (AIJ), no. 237 (2016): 41–58.

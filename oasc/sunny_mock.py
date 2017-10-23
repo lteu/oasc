@@ -328,27 +328,7 @@ def get_schedule_maxi(neighbours, timeout, portfolio, k, backup, schedule_size):
   cutoff = schedule_size
   inst_dic = neighbours
   portfolio_names = portfolio
-
   promising_one = promising_solver_maxi(inst_dic,portfolio_names,cutoff)
-
-  # n = sum([solved_info[s]['count'] for s in best_pfolio]) + (k - max_solved)
-  # schedule = {}
-  # # Compute the schedule and sort it by number of solved instances.
-  # for solver in best_pfolio:
-  #   ns = solved_info[s]['count']
-  #   if ns == 0 or round(timeout / n * ns) == 0:
-  #     continue
-  #   schedule[solver] = timeout / n * ns
-  
-  # tot_time = sum(schedule.values())
-  # # Allocate to the backup solver the (eventual) remaining time.
-  # if round(tot_time) < timeout:
-  #   if backup in schedule.keys():
-  #     schedule[backup] += timeout - tot_time
-  #   else:
-  #     schedule[backup]  = timeout - tot_time
-  # sorted_schedule = sorted(schedule.items(), key = lambda x: solved_info[x[0]]['time'])
-  # return sorted_schedule
   return [[promising_one,99999]]
 
 
@@ -368,11 +348,7 @@ def promising_solver_maxi(inst_dic,portfolio_names,cutoff):
 
   performances = [(k,v['time']) for k,v in solved_initally.iteritems()]  
   performances = sorted(performances, key=lambda x: x[1],reverse=True)
-  # print performances
   return performances[0][0]
-  # best_pfolio,unsolver = mine_solver(insts,inst_dic,portfolio_names,cutoff)
-  # max_solved = len(insts) - unsolver
-  # return best_pfolio,solved_initally,max_solved
 
 
 def promising_solver(inst_dic,portfolio_names,cutoff):
@@ -438,13 +414,9 @@ def solution_score_maxi(args,solution,feature_cost,runtimes):
   '''
   # statistics and evaluation 
   fsi = 0.0
-  fsi_vbs = 0.0
-  fsi_sbs = 0.0
   par10 = 0.0
-  par10_vbs = 0.0
-  par10_sbs = 0.0
+
   n = len(solution)
-  m = 0
   p = 0
 
   instances = []
@@ -459,8 +431,6 @@ def solution_score_maxi(args,solution,feature_cost,runtimes):
     instances.append(inst)
 
     times = [x[1] for x in runtimes[inst].values() if x[0] == 'ok']
-    par10_vbs += max(times)
-
     solver = row[2]
 
     if runtimes[inst][solver][0] == 'ok' :
@@ -483,10 +453,8 @@ def solution_score_mock(args,solution,feature_cost,runtimes):
   # statistics and evaluation 
   fsi = 0.0
   fsi_vbs = 0.0
-  fsi_sbs = 0.0
   par10 = 0.0
   par10_vbs = 0.0
-  par10_sbs = 0.0
   n = 0
   m = 0
   p = 0

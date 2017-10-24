@@ -122,16 +122,24 @@ wrapper-based feature selection.
 \subsection{Execution modalities}
 
 SUNNY-OASC has two execution modalities: \texttt{autok} and 
-\texttt{fkvar}. \textbf{WHAT IS T-SUNNY???}
+\texttt{fkvar}.
 
 \begin{itemize}
-  \item The \texttt{autok} is a variant of T-SUNNY as defined by 
-\cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved by training 
-also on the size of the neighborhood 
-$k$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
+\item The \texttt{autok} is a variant of T-SUNNY \cite{DBLP:conf/lion/LindauerBH16}, 
+i.e., an improvement of SUNNY-AS that trains also on the size of the neighborhood 
+$k$. \texttt{autok} is slightly different than T-SUNNY since the 
 reimplementation of T-SUNNY used a different algorithm to select the 
 solvers to use. To choose the solvers we used the original SUNNY-AS 
-algorithm.}
+algorithm instead.
+
+%   \item The \texttt{autok} is a variant of T-SUNNY as defined by 
+% \cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved by training 
+% also on the size of the neighborhood 
+% $k$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
+% reimplementation of T-SUNNY used a different algorithm to select the 
+% solvers to use. To choose the solvers we used the original SUNNY-AS 
+% algorithm.}
+
   \item The \texttt{fkvar} trains both on the neighborhood size and 
 the subset of features to consider by using a wrapper method 
 \citep{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 

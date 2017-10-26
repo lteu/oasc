@@ -89,8 +89,9 @@ Selection Challenge.
 
 % \subsection{SUNNY}
 
-SUNNY is a per instance algorithm scheduling strategy based on $k$-NN algorithm. Roughly 
-speaking, for each test instance SUNNY selects
+SUNNY is a per instance algorithm scheduling strategy based on $k$-NN algorithm.
+The main aim of SUNNY is to minimize the runtime for solving problem instances. 
+Roughly speaking, for each test instance SUNNY selects
 $k$ training instances which are similar to the test instance
 in terms of Euclidean Distance (on instance features). Based on the selected instances,
 SUNNY generates a schedule of solvers that maximize the number of
@@ -98,6 +99,16 @@ instances solved by the selected solvers.
 Then, a time slot proportional to the fraction of solved instances is
 assigned to each solver. Finally, the proposed solvers are ordered
 according to the average solving time on the selected instances.
+
+In the OASC challenge, there were also several particular scenarios
+where the runtime is replaced by the solution score, and their objective is
+maximization. Unfortunately, the default SUNNY has no runtime information to rely on
+to generate solver schedule, thus, the portfolio approach is
+not applicable any more. To satisfy the requirments of these scenarios, 
+we used an experimental approach:
+straightforwardly, after selecting the $k$ neighbourhood instances, 
+we pick only one solver which achieves the highest accumulated solution score of the $k$ instances.
+
 
 For a detailed description of the SUNNY approach we refer the interested 
 reader to \cite{sunny,sunnycp2,paper_amai}.
@@ -231,6 +242,8 @@ tasks.txt}.
 
 To run \texttt{fkvar} it is enough to replace 
  \texttt{autok} by \texttt{fkvar} in the above commands. 
+
+\newpage 
 
 \bibliography{reference}
 

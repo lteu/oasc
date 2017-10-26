@@ -90,7 +90,7 @@ Selection Challenge.
 % \subsection{SUNNY}
 
 SUNNY is a per instance algorithm scheduling strategy based on $k$-NN algorithm.
-The main aim of SUNNY is to minimize the runtime for solving problem instances. 
+% The main aim of SUNNY is to minimize the runtime for solving problem instances. 
 Roughly speaking, for each test instance SUNNY selects
 $k$ training instances which are similar to the test instance
 in terms of Euclidean Distance (on instance features). Based on the selected instances,
@@ -100,15 +100,14 @@ Then, a time slot proportional to the fraction of solved instances is
 assigned to each solver. Finally, the proposed solvers are ordered
 according to the average solving time on the selected instances.
 
-In the OASC challenge, there were also several particular scenarios
-where the runtime is replaced by the solution score, and their objective is
-maximization. Unfortunately, the default SUNNY has no runtime information to rely on
-to generate solver schedule, thus, the portfolio approach is
-not applicable any more. To satisfy the requirments of these scenarios, 
-we used an experimental approach:
+In the OASC challenge, there were also several scenarios 
+where the goal was maximization instead of satisfaction.
+For these problems we used an experimental approach:
 straightforwardly, after selecting the $k$ neighbourhood instances, 
-we pick only one solver which achieves the highest accumulated solution score of the $k$ instances.
-
+we picked only one solver which achieves the highest accumulated solution score 
+on the $k$ instances.
+Note that this is not the default approach used by SUNNY for constraint 
+optimization problems~\citep{sunnycp2,paper_amai}.
 
 For a detailed description of the SUNNY approach we refer the interested 
 reader to \cite{sunny,sunnycp2,paper_amai}.

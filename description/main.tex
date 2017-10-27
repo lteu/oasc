@@ -1,60 +1,27 @@
- % use the "wcp" class option for workshop and conference
- % proceedings
- %\documentclass[gray]{jmlr} % test grayscale version
- %\documentclass[tablecaption=bottom]{jmlr}% journal article
- \documentclass[tablecaption=bottom,wcp]{jmlr} % W&CP article
 
- % The following packages will be automatically loaded:
- % amsmath, amssymb, natbib, graphicx, url, algorithm2e
-
- %\usepackage{rotating}% for sideways figures and tables
- %\usepackage{longtable}% for long tables
-
- % The booktabs package is used by this sample document
- % (it provides \toprule, \midrule and \bottomrule).
- % Remove the next line if you don't require it.
+\documentclass[tablecaption=bottom,wcp]{jmlr} % W&CP article
 \usepackage{booktabs}
- % The siunitx package is used by this sample document
- % to align numbers in a column by their decimal point.
- % Remove the next line if you don't require it.
 \usepackage[load-configurations=version-1]{siunitx} % newer version
 \usepackage{color}
- %\usepackage{siunitx}
 
- % The following command is just for this sample document:
-\newcommand{\cs}[1]{\texttt{\char`\\#1}}% remove this in your real article
 
 \newcommand{\TODO}[1]{\textcolor{red}{#1}}
- % Define an unnumbered theorem just for this sample document for
- % illustrative purposes:
+
 \theorembodyfont{\upshape}
 \theoremheaderfont{\scshape}
 \theorempostheader{:}
 \theoremsep{\newline}
 \newtheorem*{note}{Note}
 
- % change the arguments, as appropriate, in the following:
 \jmlrvolume{1}
 \jmlryear{2017}
 \jmlrsubmitted{submission date}
 \jmlrpublished{publication date}
 \jmlrworkshop{OASC Challenge} % W&CP title
 
- % The optional argument of \title is used in the header
 \title[SUNNY-OASC]{SUNNY with Algorithm Configuration}
 
 
-
-
- % Two authors with the same address
-  % \author{\Name{Tong Liu} \Email{t.liu@unibo.it}\\
-  %  \Name{Roberto Amadini} \Email{roberto.amadini@unimelb.edu.au}\\
-  %  \Name{Jacopo Mauro} \Email{mauro.jacopo@gmail.com}\\
-  %   }
-
-
-
- % Authors with different addresses:
  \author{\Name{Tong Liu} \Email{t.liu@unibo.it}\\
  \addr University of Bologna, Italy 
  \AND
@@ -66,13 +33,12 @@
  }
 
 
- %\editors{Editor One and Editor Two}% for multiple editors
 
 \begin{document}
 
 \maketitle
 
-\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
+\begin{abstract}
 The SUNNY algorithm is a portfolio technique originally tailored for 
 Constraint Satisfaction Problems (CSPs). SUNNY allows to select a set of 
 solvers to be run on a given CSP, and was proven to be effective in the 
@@ -87,10 +53,7 @@ Selection Challenge.
 
 \section{SUNNY-OASC}
 
-% \subsection{SUNNY}
-
 SUNNY is a per instance algorithm scheduling strategy based on $k$-NN algorithm.
-% The main aim of SUNNY is to minimize the runtime for solving problem instances. 
 Roughly speaking, for each test instance SUNNY selects
 $k$ training instances which are similar to the test instance
 in terms of Euclidean Distance (on instance features). Based on the selected instances,
@@ -111,23 +74,12 @@ optimization problems~\citep{sunnycp2,paper_amai}.
 
 For a detailed description of the SUNNY approach we refer the interested 
 reader to \cite{sunny,sunnycp2,paper_amai}.
-% In the tool SUNNY-AS (see ),
-% we selected a subset of solvers, which solve 
-% the $k$ instances as least time as possible.
 In the following we present SUNNY-OASC, an extension of the
 original SUNNY algorithm that enables the configuration of the neighborhood 
 size $k$ 
 (an idea borrowed from \cite{DBLP:conf/lion/LindauerBH16}) and a 
 wrapper-based feature selection.
 
-% and \cite{Kohavi97wrappersfor}.
-
-% In particular, as \cite{DBLP:conf/lion/LindauerBH16} show, the improvement 
-% in performance w.r.t. SUNNY-AS is mainly due to  has demonstrated that how a 
-% training phase, by studying the value $k$ and the number of solvers, can boost 
-% SUNNY performance. However, we believe that the number of solvers is a trivial 
-% option to configure, because, in our original version, SUNNY employs less 
-% solvers as reported. 
 
 \subsection{Execution modalities}
 
@@ -142,20 +94,12 @@ reimplementation of T-SUNNY used a different algorithm to select the
 solvers to use. To choose the solvers we used the original SUNNY-AS 
 algorithm instead.
 
-%   \item The \texttt{autok} is a variant of T-SUNNY as defined by 
-% \cite{DBLP:conf/lion/LindauerBH16} where SUNNY-AS has been improved by training 
-% also on the size of the neighborhood 
-% $k$.\footnote{\texttt{autok} is slightly different than T-SUNNY since the 
-% reimplementation of T-SUNNY used a different algorithm to select the 
-% solvers to use. To choose the solvers we used the original SUNNY-AS 
-% algorithm.}
-
-  \item The \texttt{fkvar} trains both on the neighborhood size and 
+\item The \texttt{fkvar} trains both on the neighborhood size and 
 the subset of features to consider by using a wrapper method 
 \citep{Kohavi97wrappersfor}. SUNNY is used as the evaluator and a 
 greedy forward selection is adopted to select the subset of features for 
 computing the neighborhood.
-% 
+
 The selection procedure is defined as follow: 
 the unselected feature set is considered and we pick one feature at time, 
 adding it to the selected feature set (initially empty) to form a test 
@@ -197,21 +141,6 @@ competitive performance. For this reason, in \texttt{fkvar} we fixed
 execution runtime, for the \texttt{fkvar} approach we 
 consider only $1500$ instances to be included in the 
 representative instance set. We also fixed $k$ to vary between 3 and 30. 
-% \footnote{Note that with scenarios with around 5.000 instances, the training 
-% may take a couple of days for training. Besides, the interval [3,30] would 
-% cover most of the useful K values. }.
-
-% \TODO{Jac: non capisco questa frase e pertanto la commento. In addition, in the 
-% submitted \texttt{fkvar} version, when evaluating feature relevance, the par10 
-% is calculated by averaging par10 of the best k instead of a single best k.}
-
-% \TODO{Tong: infatti, la descrizione chiede 'brief description' quindi possiamo
-% anche lasciare questo pezzo commentato. Pero' per spiegare meglio,
-% faccio un esempio, par10 per K in [1,5] con feature f1 e' S =(3,2,3,5,1),
-% utility(f1) = min(S) = min(3,2,3,5,1) = 1 
-% invece, questa proposta del fkvar-3, e' utility(f1) = (1+2+3)/3 = 2 dove, 
-% 1,2,3 sono i primi 3 par10 piu' piccoli in S.
-% questo approccio aiuta sunny-as in qualche modo di evitare di staccare in local optima}
 
 When \texttt{fkvar} is executed, we also run 
 \texttt{autok} with $k \in [3,80]$ as a backup. If SUNNY runs better with the 
@@ -220,7 +149,6 @@ entire feature set, we then use the result produced by \texttt{autok}.
 For the \texttt{autok} version submitted, different to the one used when 
 running SUNNY-OASC in the \texttt{fkvar} modality, we consider the 
 full training set as effective training data. 
-%(i.e., more than 1500 instances are used for the training process if available). 
 
 \section{Setup Instructions}
 
@@ -245,6 +173,5 @@ To run \texttt{fkvar} it is enough to replace
 
 \bibliography{reference}
 
-% \appendix
 
 \end{document}
